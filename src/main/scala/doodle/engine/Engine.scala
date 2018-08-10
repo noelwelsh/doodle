@@ -15,14 +15,15 @@
  */
 
 package doodle
-package fx
-package algebra
+package engine
 
-final case class Algebra()
-    extends Blend
-    with Shape
-    with Layout
-    with Path
-    with Style {
-  implicit val graphicsContext = FxGraphicsContext
+import cats.effect.IO
+
+/**
+  * The `Engine` typeclass describes a data type that can create an area to
+  * render an image (a Canvas) and render an image to that Canvas.
+  */
+trait Engine[Algebra, F[_], Canvas]{
+  def frame(description: Frame): IO[Canvas]
+  def render[A](canvas: Canvas)(f: Algebra => F[A]): IO[A]
 }

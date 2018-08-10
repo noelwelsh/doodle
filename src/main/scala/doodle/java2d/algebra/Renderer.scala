@@ -25,6 +25,8 @@ import doodle.java2d.engine.Engine
 
 object Renderer extends doodle.algebra.Renderer[Algebra, Drawing] {
   def render[A, Alg >: Algebra](image: Image[Alg, Drawing, A]): IO[A] = {
-    Engine.frame(Frame.fitToImage())(algebra => image(algebra))
+    Engine.frame(Frame.fitToImage()).flatMap(canvas =>
+      Engine.render(canvas)(algebra => image(algebra))
+    )
   }
 }
