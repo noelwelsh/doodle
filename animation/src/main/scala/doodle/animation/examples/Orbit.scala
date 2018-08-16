@@ -15,15 +15,24 @@
  */
 
 package doodle
-package engine
+package animation
+package examples
 
-import cats.effect.IO
+import doodle.algebra.Image
+import doodle.core._
+import doodle.language.Basic
+import doodle.syntax._
 
-/**
-  * The `Engine` typeclass describes a data type that can create an area to
-  * render an image (a Canvas) and render an image to that Canvas.
-  */
-trait Engine[Algebra, F[_], Canvas]{
-  def frame(description: Frame): IO[Canvas]
-  def render[A](canvas: Canvas)(f: Algebra => F[A]): IO[A]
+object Orbit {
+  def image[F[_]](angle: Angle): Image[Basic[F],F,Unit] =
+    Basic.image[F,Unit]{ implicit algebra: Basic[F] =>
+      import algebra._
+
+      circle(10).at(angle.sin * 200, angle.cos * 200).fillColor(Color.cornSilk)
+    }
+
+  def frames[F[_]]: List[Image[Basic[F],F,Unit]] =
+    List.range(0, 3600)
+      .map{ angle => angle.degrees }
+      .map{ angle => image[F](angle) }
 }
