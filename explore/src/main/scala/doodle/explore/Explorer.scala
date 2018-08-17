@@ -15,24 +15,17 @@
  */
 
 package doodle
-package animation
-package examples
+package explore
 
-import doodle.algebra.Image
-import doodle.core._
-import doodle.language.Basic
-import doodle.syntax._
+import cats.effect.IO
+import monix.reactive.Observable
 
-object Orbit {
-  def image[F[_]](angle: Angle): Image[Basic[F],F,Unit] =
-    Basic.image[F,Unit]{ implicit algebra: Basic[F] =>
-      import algebra._
+trait Explorer[UI,A] {
+  def ui: UI
+  def value: Observable[A]
+  def render: IO[Observable[A]]
+}
 
-      circle(10).at(angle.sin * 200, angle.cos * 200).fillColor(Color.cornSilk)
-    }
-
-  def frames[F[_]]: List[Image[Basic[F],F,Unit]] =
-    List.range(0, 3600)
-      .map{ angle => angle.degrees }
-      .map{ angle => image[F](angle) }
+trait ExplorerFactory[UI,A] {
+  def create: Explorer[UI,A]
 }
