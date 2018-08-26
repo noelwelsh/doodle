@@ -37,6 +37,7 @@ lazy val commonSettings = Seq(
 
   initialCommands in console := """
       |import doodle.java2d._
+      |import doodle.image._
       |import doodle.syntax._
       |import doodle.examples._
     """.trim.stripMargin,
@@ -54,6 +55,7 @@ lazy val root = (project in file("."))
     initialCommands in console := """
       |import cats.instances.all._
       |import doodle.java2d._
+      |import doodle.image._
       |import doodle.syntax._
       |import doodle.engine.Writer._
       |import doodle.examples._
@@ -66,6 +68,7 @@ lazy val root = (project in file("."))
     """.trim.stripMargin
   )
   .dependsOn(animate, core, explore)
+  .aggregate(animate, core, explore)
 
 lazy val core = (project in file("core"))
   .settings(commonSettings)
